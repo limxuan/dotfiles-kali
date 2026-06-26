@@ -19,7 +19,10 @@ chmod +x setup-xfce-keybinds.sh
 # 3. Clean up conflicting config paths to prevent Stow conflicts
 remove_if_real() {
   local path="$1"
-  if [ -e "$path" ] && [ ! -L "$path" ]; then
+  if [ -L "$path" ]; then
+    echo "  - Removing existing symlink $path..."
+    rm -rf "$path"
+  elif [ -e "$path" ]; then
     echo "  - Backing up existing $path..."
     local backup_path="${path}.bak.$(date +%s)"
     mv "$path" "$backup_path" 2>/dev/null || rm -rf "$path"
