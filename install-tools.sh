@@ -29,8 +29,13 @@ sudo apt-get install -y \
 if ! command -v sesh &>/dev/null; then
   echo "[+] Installing sesh (Tmux session manager)..."
   # Fetch latest sesh release info and download
-  SESH_VERSION=$(curl -s "https://api.github.com/repos/joshmedeski/sesh/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-  echo "Found sesh version: v$SESH_VERSION"
+  SESH_VERSION=$(curl -s "https://api.github.com/repos/joshmedeski/sesh/releases/latest" | grep -Po '"tag_name": "v\K[^"]*' || echo "")
+  if [ -z "$SESH_VERSION" ]; then
+    echo "[!] Failed to fetch latest sesh version from GitHub (rate limit or network error). Falling back to v2.4.0..."
+    SESH_VERSION="2.4.0"
+  else
+    echo "Found sesh version: v$SESH_VERSION"
+  fi
   curl -sLo /tmp/sesh.tar.gz "https://github.com/joshmedeski/sesh/releases/download/v${SESH_VERSION}/sesh_${SESH_VERSION}_linux_amd64.tar.gz"
   tar -xzf /tmp/sesh.tar.gz -C /tmp
   sudo mv /tmp/sesh /usr/local/bin/sesh
