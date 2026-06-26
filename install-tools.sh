@@ -22,6 +22,7 @@ sudo apt-get install -y \
   curl \
   wget \
   neovim \
+  alacritty \
   build-essential
 
 # --- Install Sesh (Tmux Session Manager) ---
