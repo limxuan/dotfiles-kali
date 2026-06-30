@@ -24,7 +24,8 @@ sudo apt-get install -y \
   neovim \
   alacritty \
   build-essential \
-  avahi-daemon
+  avahi-daemon \
+  i3
 
 # --- Install Sesh (Tmux Session Manager) ---
 if ! command -v sesh &>/dev/null; then
