@@ -35,7 +35,6 @@ remove_if_real "$HOME/.config/fish"
 remove_if_real "$HOME/.config/nvim"
 remove_if_real "$HOME/.config/starship.toml"
 remove_if_real "$HOME/.config/tmux"
-remove_if_real "$HOME/.config/i3"
 
 if [ -e "/etc/keyd" ] && [ ! -L "/etc/keyd" ]; then
   echo "  - Backing up existing /etc/keyd..."
@@ -56,7 +55,7 @@ sudo systemctl enable --now avahi-daemon
 
 # 5. Stow user dotfiles
 echo "[+] Stowing user configuration files..."
-stow alacritty fish nvim starship tmux i3
+stow alacritty fish nvim starship tmux
 
 # 6. Install TPM (Tmux Plugin Manager) if missing
 if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
