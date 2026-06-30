@@ -9,20 +9,17 @@ echo "[+] Configuring XFCE Workspace keyboard shortcuts..."
 xfconf-query -c xfwm4 -p /general/workspace_count -n -t int -s 6 || true
 
 # Bind keys for workspaces 1..6:
-# 1. Caps Lock + 1..6 (maps to Primary+Shift+Alt+1..6 via keyd) to Switch Workspace
-# 2. Ctrl + Alt + 1..6 (Primary+Alt+1..6) as a troubleshooting fallback to Switch Workspace (bypasses keyd)
-# 3. Alt + Shift + 1..6 to Move active window to Workspace
+# 1. Switch Workspace shortcut: Ctrl + Alt + 1..6 (Primary+Alt+1..6)
+#    (This is triggered by both physical Ctrl+Alt+1..6 and Caps+1..6 since Caps maps to C-A-1..6)
+# 2. Move active window to Workspace: Alt + Shift + 1..6
 for i in {1..6}; do
   echo "  - Mapping Workspace $i shortcuts (Switch & Move)"
   
-  # Switch Workspace shortcut (Caps Lock + 1..6 -> Ctrl+Shift+Alt+1..6)
-  # Map both permutations of Primary/Alt/Shift modifiers to ensure matching
+  # Clear the old conflicting Ctrl+Shift+Alt+1..6 custom shortcuts if they exist
   xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Primary><Shift><Alt>$i" --reset &>/dev/null || true
-  xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Primary><Shift><Alt>$i" -n -t string -s "workspace_${i}_key"
   xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Primary><Alt><Shift>$i" --reset &>/dev/null || true
-  xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Primary><Alt><Shift>$i" -n -t string -s "workspace_${i}_key"
   
-  # Switch Workspace shortcut (Ctrl + Alt + 1..6 fallback)
+  # Switch Workspace shortcut (Ctrl + Alt + 1..6)
   xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Primary><Alt>$i" --reset &>/dev/null || true
   xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Primary><Alt>$i" -n -t string -s "workspace_${i}_key"
   
