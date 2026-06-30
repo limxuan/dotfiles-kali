@@ -35,6 +35,7 @@ remove_if_real "$HOME/.config/fish"
 remove_if_real "$HOME/.config/nvim"
 remove_if_real "$HOME/.config/starship.toml"
 remove_if_real "$HOME/.config/tmux"
+remove_if_real "$HOME/.ssh/config"
 
 if [ -e "/etc/keyd" ] && [ ! -L "/etc/keyd" ]; then
   echo "  - Backing up existing /etc/keyd..."
@@ -43,15 +44,20 @@ fi
 
 # Ensure target directories exist
 mkdir -p "$HOME/.config"
+mkdir -p "$HOME/.ssh"
 
 # 4. Stow system configurations (keyd)
 echo "[+] Installing and stowing keyd system configuration..."
 sudo stow -t / keyd
 sudo systemctl enable --now keyd.service
 
+# Enable Avahi daemon for mDNS resolution
+echo "[+] Enabling Avahi daemon for mDNS resolution..."
+sudo systemctl enable --now avahi-daemon
+
 # 5. Stow user dotfiles
 echo "[+] Stowing user configuration files..."
-stow alacritty fish nvim starship tmux
+stow alacritty fish nvim starship tmux ssh
 
 # 6. Install TPM (Tmux Plugin Manager) if missing
 if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
