@@ -36,7 +36,7 @@ if ! command -v sesh &>/dev/null; then
   else
     echo "Found sesh version: v$SESH_VERSION"
   fi
-  curl -sLo /tmp/sesh.tar.gz "https://github.com/joshmedeski/sesh/releases/download/v${SESH_VERSION}/sesh_${SESH_VERSION}_linux_amd64.tar.gz"
+  curl -sLo /tmp/sesh.tar.gz "https://github.com/joshmedeski/sesh/releases/download/v${SESH_VERSION}/sesh_Linux_x86_64.tar.gz"
   tar -xzf /tmp/sesh.tar.gz -C /tmp
   sudo mv /tmp/sesh /usr/local/bin/sesh
   sudo chmod +x /usr/local/bin/sesh
@@ -55,6 +55,17 @@ if ! command -v obsidian &>/dev/null; then
   echo "[+] Obsidian installed"
 else
   echo "[*] Obsidian is already installed"
+fi
+
+# --- Install Visual Studio Code ---
+if ! command -v code &>/dev/null; then
+  echo "[+] Downloading and installing Visual Studio Code (.deb)..."
+  wget -O /tmp/code.deb "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
+  sudo apt-get install -y /tmp/code.deb
+  rm -f /tmp/code.deb
+  echo "[+] Visual Studio Code installed"
+else
+  echo "[*] Visual Studio Code is already installed"
 fi
 
 # --- Install Mise (Runtime manager) ---
