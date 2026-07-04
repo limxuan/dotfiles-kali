@@ -44,4 +44,22 @@ if command -v xfwm4 --replace &>/dev/null; then
   xfwm4 --replace --daemonize &>/dev/null || true
 fi
 
+# Add custom application shortcuts
+echo "[+] Configuring custom application shortcuts..."
+
+# Set kitty as the preferred XFCE terminal emulator helper
+echo "[+] Setting default XFCE terminal emulator to kitty..."
+mkdir -p "$HOME/.config/xfce4"
+touch "$HOME/.config/xfce4/helpers.rc"
+sed -i '/^TerminalEmulator=/d' "$HOME/.config/xfce4/helpers.rc"
+echo "TerminalEmulator=kitty" >> "$HOME/.config/xfce4/helpers.rc"
+
+# Super + Return to launch terminal
+xfconf-query -c xfce4-keyboard-shortcuts -p "/commands/custom/<Super>Return" --reset &>/dev/null || true
+xfconf-query -c xfce4-keyboard-shortcuts -p "/commands/custom/<Super>Return" -n -t string -s "exo-open --launch TerminalEmulator"
+
+# Super + b to launch web browser
+xfconf-query -c xfce4-keyboard-shortcuts -p "/commands/custom/<Super>b" --reset &>/dev/null || true
+xfconf-query -c xfce4-keyboard-shortcuts -p "/commands/custom/<Super>b" -n -t string -s "exo-open --launch WebBrowser"
+
 echo "[+] XFCE keyboard shortcuts successfully configured!"
