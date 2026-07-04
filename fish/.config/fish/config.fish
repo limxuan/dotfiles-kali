@@ -29,3 +29,7 @@ mise activate fish | source
 
 # opencode
 fish_add_path /home/limxuan/.opencode/bin
+
+
+# Added by Antigravity CLI installer
+set -gx PATH "/home/lx/.local/bin" $PATH
