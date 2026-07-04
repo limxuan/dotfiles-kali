@@ -3,14 +3,15 @@ function edit_clipboard
     set temp_file (mktemp /tmp/clipboard_edit.XXXXXX)
 
     # Get the clipboard content and save it to the temporary file
-    xclip -selection clipboard -o > $temp_file 2>/dev/null
+    wl-paste > $temp_file
 
     # Open the temporary file in Neovim
     nvim $temp_file
 
-    # Save the edited content back to the clipboard
-    if test -f $temp_file
-        xclip -selection clipboard -i $temp_file 2>/dev/null
-        rm $temp_file
-    end
+    # Copy the edited content back to the clipboard
+    wl-copy < $temp_file
+
+    # Clean up the temporary file
+    rm $temp_file
 end
+

@@ -1,3 +1,4 @@
 function open_lazygit
-    lazygit
+    lazygit 
 end
+
