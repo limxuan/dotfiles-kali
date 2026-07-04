@@ -12,8 +12,12 @@ xfconf-query -c xfwm4 -p /general/workspace_count -n -t int -s 6 || true
 # 1. Switch Workspace shortcut: Ctrl + Alt + 1..6 (Primary+Alt+1..6)
 #    (This is triggered by both physical Ctrl+Alt+1..6 and Caps+1..6 since Caps maps to C-A-1..6)
 # 2. Move active window to Workspace: Alt + Shift + 1..6
+# Shift symbols for numbers 1..6 on a standard US keyboard
+symbols=("exclam" "at" "numbersign" "dollar" "percent" "asciicircum")
+
 for i in {1..6}; do
   echo "  - Mapping Workspace $i shortcuts (Switch & Move)"
+  sym=${symbols[$((i-1))]}
   
   # Clear old conflicting custom Ctrl+Alt+1..6 shortcuts if they exist
   xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Primary><Alt>$i" --reset &>/dev/null || true
@@ -25,11 +29,13 @@ for i in {1..6}; do
   xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Primary><Alt><Shift>$i" -n -t string -s "workspace_${i}_key"
   
   # Move Window to Workspace shortcut (Alt + Shift + 1..6)
-  # Map both permutations of Alt/Shift modifiers to ensure matching
-  xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Alt><Shift>$i" --reset &>/dev/null || true
-  xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Alt><Shift>$i" -n -t string -s "move_window_workspace_${i}_key"
-  xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Shift><Alt>$i" --reset &>/dev/null || true
-  xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Shift><Alt>$i" -n -t string -s "move_window_workspace_${i}_key"
+  # Map both the numbers and their shifted symbols to ensure compatibility
+  for key in "$i" "$sym"; do
+    xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Alt><Shift>$key" --reset &>/dev/null || true
+    xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Alt><Shift>$key" -n -t string -s "move_window_workspace_${i}_key"
+    xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Shift><Alt>$key" --reset &>/dev/null || true
+    xfconf-query -c xfce4-keyboard-shortcuts -p "/xfwm4/custom/<Shift><Alt>$key" -n -t string -s "move_window_workspace_${i}_key"
+  done
 done
 
 # Restart xfwm4 to apply changes safely
