@@ -1,19 +1,29 @@
 add_newline = true
 command_timeout = 200
-format = "$directory$git_branch$git_status$custom$character"
+format = """
+[┌──(](bold blue)$username[㉿](bold blue)$hostname[)-](bold blue)$directory$git_branch$git_status$custom
+$character"""
 
 [character]
-error_symbol = "[-- ](bold red)"
-success_symbol = "[-- ](bold red)"
+success_symbol = "[└─$ ](bold blue)"
+error_symbol = "[└─$ ](bold red)"
+
+[username]
+show_always = true
+format = "[$user](bold red)"
+
+[hostname]
+ssh_only = false
+format = "[$hostname](bold red)"
 
 [directory]
 truncation_length = 2
 truncation_symbol = "…/"
 style = "bold cyan"
-format = "[$path]($style)[$read_only]($read_only_style) "
+format = "[\[](bold blue)[$path]($style)[\]](bold blue) "
 
 [git_branch]
-format = "- [$branch]($style) "
+format = "[-[](bold blue)[$branch]($style)[\]](bold blue) "
 style = "italic cyan"
 
 [git_status]
@@ -39,16 +49,17 @@ interface=$(echo "$route_info" | grep -oP 'dev \K\S+')
 ip=$(echo "$route_info" | grep -oP 'src \K[\d.]+')
 
 if [ -n "$interface" ] && [ -n "$ip" ]; then
-  echo "[$interface:$ip]"
+  echo "$interface:$ip"
 else
   # Offline fallback: find first non-loopback interface with an IPv4 address
   interface=$(ip -4 -o addr show | grep -v ' lo ' | awk '{print $2}' | head -n 1)
   ip=$(ip -4 -o addr show | grep -v ' lo ' | awk '{print $4}' | cut -d/ -f1 | head -n 1)
   if [ -n "$interface" ] && [ -n "$ip" ]; then
-    echo "[$interface:$ip]"
+    echo "$interface:$ip"
   fi
 fi
 '''
 when = "true"
 style = "bold red"
-format = "- [$output]($style) "
+format = "[-[](bold blue)[$output]($style)[\]](bold blue) "
+
